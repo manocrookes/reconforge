@@ -1,0 +1,12 @@
+{
+    "target": "example.com",
+    "resolved_ips": [
+        "104.18.27.120",
+        "104.18.26.120"
+    ],
+    "http": {
+        "url": "http://example.com",
+        "status_code": 200,
+        "title": "Example Domain"
+    }
+}

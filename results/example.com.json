@@ -1,0 +1,23 @@
+{
+    "target": "example.com",
+    "dns": {
+        "a_records": [
+            "104.18.27.120",
+            "104.18.26.120"
+        ],
+        "aaaa_records": [
+            "2606:4700::6812:1b78",
+            "2606:4700::6812:1a78"
+        ]
+    },
+    "http": {
+        "url": "http://example.com",
+        "status_code": 200,
+        "title": "Example Domain",
+        "headers": {
+            "server": "cloudflare",
+            "content-type": "text/html",
+            "content-length": "N/A"
+        }
+    }
+}
