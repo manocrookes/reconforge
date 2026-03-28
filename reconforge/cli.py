@@ -17,6 +17,7 @@ def main():
 def run(
     target: str,
     output_dir: str = typer.Option("output", "--output-dir", help="Directory to save reports."),
+    wordlist: str = typer.Option(None, "--wordlist", help="Path to subdomain wordlist"),
 ):
     """
     Run reconnaissance against a target.
@@ -27,4 +28,4 @@ def run(
         typer.echo(f"[-] {exc}")
         raise typer.Exit(code=1)
 
-    run_scan(validated_target, output_dir)
+    run_scan(validated_target, output_dir, wordlist)

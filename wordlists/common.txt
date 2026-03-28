@@ -1,0 +1,14 @@
+www
+mail
+api
+dev
+test
+staging
+app
+admin
+blog
+vpn
+portal
+internal
+secure
+gateway

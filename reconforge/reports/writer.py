@@ -43,6 +43,8 @@ def write_markdown_report(data: dict, target: str, output_dir: str = "output") -
     aaaa_records = dns_data.get("aaaa_records", [])
     reverse_dns = dns_data.get("reverse_dns", [])
 
+    subdomains = data.get("subdomains", [])
+
     http_data = data.get("http", {})
     headers = http_data.get("headers", {})
     security_headers = http_data.get("security_headers", {})
@@ -54,6 +56,14 @@ def write_markdown_report(data: dict, target: str, output_dir: str = "output") -
     a_section = "\n".join(f"- {ip}" for ip in a_records) if a_records else "- No A records found"
     aaaa_section = "\n".join(f"- {ip}" for ip in aaaa_records) if aaaa_records else "- No AAAA records found"
     reverse_section = "\n".join(f"- {host}" for host in reverse_dns) if reverse_dns else "- No reverse DNS records found"
+
+    subdomain_section = (
+        "\n".join(
+            f"- {item['name']} -> {', '.join(item['a_records'])}"
+            for item in subdomains
+        )
+        if subdomains else "- No common subdomains found"
+    )
 
     present_section = (
         "\n".join(f"- {header}: {value}" for header, value in present_security_headers.items())
@@ -88,6 +98,9 @@ def write_markdown_report(data: dict, target: str, output_dir: str = "output") -
 
 ### Reverse DNS
 {reverse_section}
+
+## Subdomain Enumeration
+{subdomain_section}
 
 ## HTTP Enumeration
 - URL: {http_data.get("url", "N/A")}

@@ -2,14 +2,17 @@ from reconforge.models.target import get_target_type
 from reconforge.modules.dns_enum import resolve_target, reverse_lookup
 from reconforge.modules.http_enum import enumerate_http
 from reconforge.modules.port_scan import is_nmap_installed, run_nmap_scan
+from reconforge.modules.subdomain_enum import enumerate_subdomains
 from reconforge.reports.writer import write_json_report, write_markdown_report
 
 
-def run_scan(target: str, output_dir: str = "output"):
+def run_scan(target: str, output_dir: str = "output", wordlist: str | None = None):
     print("[+] ReconForge started")
     print(f"[+] Target: {target}")
 
     target_type = get_target_type(target)
+    subdomains = []
+    used_wordlist = "N/A"
 
     if target_type == "domain":
         print("[+] Running DNS enumeration...")
@@ -31,6 +34,23 @@ def run_scan(target: str, output_dir: str = "output"):
                 print(f"    - {ip}")
         else:
             print("[-] No AAAA records found")
+
+        print("[+] Running subdomain enumeration...")
+        try:
+            subdomains, used_wordlist = enumerate_subdomains(target, wordlist)
+            print(f"[+] Wordlist in use: {used_wordlist}")
+
+            if subdomains:
+                print("[+] Discovered subdomains:")
+                for item in subdomains:
+                    print(f"    - {item['name']}")
+            else:
+                print("[-] No subdomains found with current wordlist")
+
+        except FileNotFoundError as exc:
+            print(f"[-] {exc}")
+            subdomains = []
+            used_wordlist = "N/A"
 
     else:
         print("[*] Target identified as IP address, skipping direct DNS enumeration")
@@ -87,6 +107,8 @@ def run_scan(target: str, output_dir: str = "output"):
         "target": target,
         "target_type": target_type,
         "dns": dns_result,
+        "subdomain_wordlist": used_wordlist,
+        "subdomains": subdomains,
         "http": http_result,
         "ports": ports,
     }
